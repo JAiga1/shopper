@@ -19,6 +19,44 @@
         </div>
     </nav>
 
+    <!-- Search, Filter & Sort -->
+    <div class="container mx-auto py-6 px-6 bg-white rounded shadow-md">
+        <form method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Search -->
+            <div>
+                <input type="text" name="search" placeholder="Search products..." 
+                       value="{{ request.GET.search }}" 
+                       class="w-full px-4 py-2 border rounded-lg">
+            </div>
+
+            <!-- Filter by Price -->
+            <div class="flex space-x-2">
+                <input type="number" name="min_price" placeholder="Min Price" 
+                       value="{{ request.GET.min_price }}" 
+                       class="w-1/2 px-4 py-2 border rounded-lg">
+                <input type="number" name="max_price" placeholder="Max Price" 
+                       value="{{ request.GET.max_price }}" 
+                       class="w-1/2 px-4 py-2 border rounded-lg">
+            </div>
+
+            <!-- Sorting -->
+            <div>
+                <select name="sort" class="w-full px-4 py-2 border rounded-lg">
+                    <option value="">Sort By</option>
+                    <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="md:col-span-3">
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                    Apply Filters
+                </button>
+            </div>
+        </form>
+    </div>
+
     <!-- Product Grid -->
     <div class="container mx-auto py-10 px-6">
         <h2 class="text-3xl font-semibold mb-6 text-center">Available Products</h2>

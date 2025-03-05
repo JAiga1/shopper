@@ -2,10 +2,39 @@ from .models import Product, Category
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Product, Cart, CartItem
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 
+# def product_list(request):
+#     products = Product.objects.all()
+#     return render(request, 'shop/product_list.html', {'products': products})
+
+from django.shortcuts import render
+from .models import Product
 
 def product_list(request):
+    """ View to display and filter products """
     products = Product.objects.all()
+
+    search_query = request.GET.get('search', '')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    sort_option = request.GET.get('sort')
+
+    if search_query:
+        products = products.filter(title__icontains=search_query)
+
+    if min_price:
+        products = products.filter(price__gte=min_price)
+    if max_price:
+        products = products.filter(price__lte=max_price)
+
+    if sort_option == 'price_low':
+        products = products.order_by('price')
+    elif sort_option == 'price_high':
+        products = products.order_by('-price')
+
     return render(request, 'shop/product_list.html', {'products': products})
 
 def product_detail(request, id):
@@ -81,3 +110,47 @@ def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
     cart_item.delete()
     return redirect('cart_view')
+
+from django.contrib.auth.models import User
+from django.contrib import messages
+
+def register(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+
+        if password1 != password2:
+            messages.error(request, "Passwords do not match!")
+            return redirect('register')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already taken!")
+            return redirect('register')
+
+        user = User.objects.create_user(username=username, email=email, password=password1)
+        user.save()
+        messages.success(request, "Account created successfully! Please log in.")
+        return redirect('login')
+
+    return render(request, 'shop/register.html')
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('product_list')
+        else:
+            messages.error(request, "Invalid credentials!")
+            return redirect('login')
+
+    return render(request, 'shop/login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
