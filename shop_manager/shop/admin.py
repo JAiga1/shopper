@@ -1,3 +1,4 @@
+#admin
 from django.contrib import admin
 from .models import Category, Product, Review, Cart, CartItem, Order, OrderItem, Payment, Notification, Wishlist, SearchHistory, SellerAnnouncement
 
