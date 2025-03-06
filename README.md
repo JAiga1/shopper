@@ -9,7 +9,8 @@ Shop Manager is a **Django-based e-commerce platform** that allows users to brow
 - ✅ **User Authentication** - Secure login & signup  
 - ✅ **Product Management** - Add, edit, and display products with images  
 - ✅ **Shopping Cart** - Add, remove, and update cart items  
-- ✅ **Product Filtering & Sorting** - Find products easily  
+- ✅ **Product Filtering & Sorting** - Find products easily  ......................................................................
+- .........................................
 - ✅ **Order Management** - View cart & proceed to checkout  
 - ✅ **Secure Payments** - Multiple payment options (future feature)  
 - ✅ **Mobile-Friendly UI** - Responsive design with Tailwind CSS  
